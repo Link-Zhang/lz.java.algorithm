@@ -1,7 +1,9 @@
 package cn.sh.lz.cig.c2c;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Optional;
+import java.util.Stack;
 
 /**
  * Created by Link at 11:57 on 2022/08/08.
@@ -537,5 +539,80 @@ public class Node {
             left.setNext(end);
         }
         start.setNext(right);
+    }
+
+    // 时间复杂度O(n),空间复杂度O(n)
+    public void removeDuplicates(LinkedNode head) {
+        if (null == head) {
+            return;
+        }
+        HashSet<Integer> hashSet = new HashSet<>();
+        LinkedNode pre = head;
+        LinkedNode cur = head.getNext();
+        hashSet.add(head.getData());
+        while (null != cur) {
+            if (hashSet.contains(cur.getData())) {
+                pre.setNext(cur.getNext());
+            } else {
+                hashSet.add(cur.getData());
+                pre = cur;
+            }
+            cur = cur.getNext();
+        }
+    }
+
+    // 时间复杂度O(n^2),空间复杂度O(1)
+    public void removeDuplicates2(LinkedNode head) {
+        LinkedNode cur = head;
+        LinkedNode pre = null;
+        LinkedNode next = null;
+        while (null != cur) {
+            pre = cur;
+            next = cur.getNext();
+            while (null != next) {
+                if (cur.getData() == next.getData()) {
+                    pre.setNext(next.getNext());
+                } else {
+                    pre = next;
+                }
+                next = next.getNext();
+            }
+            cur = cur.getNext();
+        }
+    }
+
+    // 时间复杂度O(n),空间复杂度O(1)
+    public void removeData(LinkedNode head, int data) {
+        while (null != head) {
+            if (data != head.getData()) {
+                break;
+            }
+            head = head.getNext();
+        }
+        LinkedNode pre = head;
+        LinkedNode cur = head;
+        while (null != cur) {
+            if (data == cur.getData()) {
+                pre.setNext(cur.getNext());
+            } else {
+                pre = cur;
+            }
+            cur = cur.getNext();
+        }
+    }
+
+    // 时间复杂度O(n),空间复杂度O(n)
+    public void removeData2(LinkedNode head, int data) {
+        Stack<LinkedNode> stack = new Stack<>();
+        while (null != head) {
+            if (data != head.getData()) {
+                stack.push(head);
+            }
+            head = head.getNext();
+        }
+        while (!stack.isEmpty()) {
+            stack.peek().setNext(head);
+            head = stack.pop();
+        }
     }
 }
